@@ -5,10 +5,10 @@
 
 using namespace std;
 
-// æ¸¸æˆé…ç½®
-const int Size = 20;   // æ¯ä¸ªæ ¼å­çš„å¤§å°
-const int Width = 30;  // æ¨ªå‘æ ¼å­æ•°
-const int Height = 20; // çºµå‘æ ¼å­æ•°
+// ÓÎÏ·ÅäÖÃ
+const int Size = 20;   // Ã¿¸ö¸ñ×ÓµÄ´óĞ¡
+const int Width = 30;  // ºáÏò¸ñ×ÓÊı
+const int Height = 20; // ×İÏò¸ñ×ÓÊı
 
 enum direction
 {
@@ -19,18 +19,18 @@ enum direction
     Stop
 };
 
-// å…¨å±€å˜é‡
+// È«¾Ö±äÁ¿
 deque<pair<int, int>> snake;
 direction dir = Stop;
 int foodX, foodY;
 int score = 0;
 bool gameover = false;
 
-// é‡ç½®æ¸¸æˆçŠ¶æ€
+// ÖØÖÃÓÎÏ·×´Ì¬
 void resetGame()
 {
     snake.clear();
-    // åˆå§‹è›‡ä½ç½®
+    // ³õÊ¼ÉßÎ»ÖÃ
     snake.push_back({Width / 2, Height / 2});
     snake.push_back({Width / 2 - 1, Height / 2});
     snake.push_back({Width / 2 - 2, Height / 2});
@@ -39,12 +39,12 @@ void resetGame()
     score = 0;
     gameover = false;
 
-    // éšæœºç”Ÿæˆé£Ÿç‰©
+    // Ëæ»úÉú³ÉÊ³Îï
     foodX = rand() % Width;
     foodY = rand() % Height;
 }
 
-// æ¸¸æˆæ›´æ–°
+// ÓÎÏ·¸üĞÂ
 void update()
 {
     if (dir == Stop || gameover)
@@ -62,7 +62,7 @@ void update()
     else if (dir == Right)
         newX++;
 
-    // æ’å¢™æˆ–æ’è‡ªå·±
+    // ×²Ç½»ò×²×Ô¼º
     if (newX < 0 || newX >= Width || newY < 0 || newY >= Height)
     {
         gameover = true;
@@ -91,14 +91,14 @@ void update()
     }
 }
 
-// çª—å£è¿‡ç¨‹å‡½æ•°
+// ´°¿Ú¹ı³Ìº¯Êı
 LRESULT CALLBACK windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
     case WM_KEYDOWN:
     {
-        // å¦‚æœæ¸¸æˆç»“æŸï¼ŒæŒ‰ç©ºæ ¼é‡æ–°å¼€å§‹
+        // Èç¹ûÓÎÏ·½áÊø£¬°´¿Õ¸ñÖØĞÂ¿ªÊ¼
         if (gameover && (wParam == VK_SPACE))
         {
             resetGame();
@@ -146,18 +146,18 @@ LRESULT CALLBACK windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
 
-        // 1. ç”»èƒŒæ™¯ (æ·±ç°è‰²)
+        // 1. »­±³¾° (Éî»ÒÉ«)
         HBRUSH bgBrush = CreateSolidBrush(RGB(30, 30, 30));
         FillRect(hdc, &ps.rcPaint, bgBrush);
         DeleteObject(bgBrush);
 
-        // 2. ç”»é£Ÿç‰© (çº¢è‰²)
+        // 2. »­Ê³Îï (ºìÉ«)
         HBRUSH foodBrush = CreateSolidBrush(RGB(255, 0, 0));
         RECT foodRect = {foodX * Size, foodY * Size, (foodX + 1) * Size, (foodY + 1) * Size};
         FillRect(hdc, &foodRect, foodBrush);
         DeleteObject(foodBrush);
 
-        // 3. ç”»è›‡ (ç»¿è‰²)
+        // 3. »­Éß (ÂÌÉ«)
         HBRUSH headBrush = CreateSolidBrush(RGB(0, 255, 0));
         HBRUSH bodyBrush = CreateSolidBrush(RGB(0, 180, 0));
         for (size_t i = 0; i < snake.size(); i++)
@@ -169,7 +169,7 @@ LRESULT CALLBACK windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         DeleteObject(headBrush);
         DeleteObject(bodyBrush);
 
-        // 4. æ˜¾ç¤ºæ–‡å­—
+        // 4. ÏÔÊ¾ÎÄ×Ö
         SetTextColor(hdc, RGB(255, 255, 255));
         SetBkMode(hdc, TRANSPARENT);
 
@@ -183,10 +183,10 @@ LRESULT CALLBACK windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                                      CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Arial"));
             SelectObject(hdc, hFont);
             SetTextColor(hdc, RGB(255, 50, 50));
-            TextOut(hdc, Width * Size / 2 - 80, Height * Size / 2 - 20, " æ¸¸æˆç»“æŸ!   ", 10);
+            TextOut(hdc, Width * Size / 2 - 80, Height * Size / 2 - 20, " ÓÎÏ·½áÊø!   ", 10);
 
             SetTextColor(hdc, RGB(200, 200, 200));
-            TextOut(hdc, Width * Size / 2 - 100, Height * Size / 2 + 20, "æŒ‰ä¸‹ç©ºæ ¼é‡æ–°å¼€å§‹    ", 20);
+            TextOut(hdc, Width * Size / 2 - 100, Height * Size / 2 + 20, "°´ÏÂ¿Õ¸ñÖØĞÂ¿ªÊ¼    ", 20);
             DeleteObject(hFont);
         }
 
@@ -203,7 +203,7 @@ LRESULT CALLBACK windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
     srand(time(0));
-    resetGame(); // åˆå§‹åŒ–æ¸¸æˆ
+    resetGame(); // ³õÊ¼»¯ÓÎÏ·
 
     const char className[] = "SnakeWindowClass";
     WNDCLASS wc = {};
@@ -213,7 +213,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     RegisterClass(&wc);
 
-    // è®¡ç®—çª—å£å®é™…å¤§å°
+    // ¼ÆËã´°¿ÚÊµ¼Ê´óĞ¡
     HWND hwnd = CreateWindowEx(0, className, "Snake Game - Window Mode",
                                WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX,
                                CW_USEDEFAULT, CW_USEDEFAULT, Width * Size + 16, Height * Size + 39,
@@ -235,7 +235,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         {
             update();
             InvalidateRect(hwnd, NULL, FALSE);
-            Sleep(150); // æ§åˆ¶é€Ÿåº¦,è¶Šå¤§è¶Šæ…¢
+            Sleep(150); // ¿ØÖÆËÙ¶È,Ô½´óÔ½Âı
         }
     }
     return 0;
